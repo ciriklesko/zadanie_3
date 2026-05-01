@@ -1,21 +1,17 @@
 <?php
 function generatePortfolio($dir) {
-    $files = glob($dir . "/*.jpg");
-    $json = file_get_contents("data/datas.json");
-    $data = json_decode($json, true);
-    $text = $data["text_portfolio"];
+    $data = json_decode(file_get_contents("data/datas.json"), true);
+    $chunks = array_chunk($data['portfolio'], 4, true);
 
-    $chunks = array_chunk($files, 4);
-
-    foreach ($chunks as $row_files) {
+    foreach ($chunks as $rowItems) {
         echo '<div class="row">';
-        
-        foreach ($row_files as $file) {
-            echo '<div class="col-25 portfolio text-white text-center" style="background-image: url(\'' . $file . '\');">';
-            echo $text[basename($file)];
+        foreach ($rowItems as $imageName => $info) {
+            echo '<div class="col-25 portfolio text-white text-center" style="background-image: url(\'' . $dir . '/' . $imageName . '\');">';
+            echo '  <a href="' . $info['url'] . '" target="_blank" style="color: inherit; text-decoration: none;">';
+            echo '      <h3>' . $info['title'] . '</h3>';
+            echo '  </a>';
             echo '</div>';
         }
-
         echo '</div>';
     }
 }
